@@ -33,6 +33,10 @@ public class Employee {
     private String status;
     private String avatarInitials;
 
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] profilePicture;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

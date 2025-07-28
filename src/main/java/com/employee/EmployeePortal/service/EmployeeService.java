@@ -1,7 +1,9 @@
 package com.employee.EmployeePortal.service;
 
 import com.employee.EmployeePortal.dto.EmployeeDTO;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface EmployeeService {
@@ -10,4 +12,6 @@ public interface EmployeeService {
     EmployeeDTO createEmployee(EmployeeDTO dto);
     EmployeeDTO updateEmployee(String id, EmployeeDTO dto);
     void deleteEmployee(String id);
+    void  updateProfilePicture(String employeeId, MultipartFile file) throws IOException;
+    byte[] getProfilePicture(String employeeId);
 }

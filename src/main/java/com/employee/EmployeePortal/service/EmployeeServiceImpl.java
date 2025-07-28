@@ -5,7 +5,9 @@ import com.employee.EmployeePortal.entity.Employee;
 import com.employee.EmployeePortal.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -103,5 +105,26 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void deleteEmployee(String id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public void updateProfilePicture(String employeeId, MultipartFile file) throws IOException{
+        Optional<Employee> optional = repository.findById(employeeId);
+        if(optional.isPresent()){
+            Employee employee = optional.get();
+            if(file != null && !file.isEmpty()){
+                employee.setProfilePicture(file.getBytes());
+                employee.setUpdatedAt(LocalDateTime.now());
+                repository.save(employee);
+            }
+        } else {
+            throw new RuntimeException("Employee Not Found With Id : " + employeeId);
+        }
+    }
+
+    @Override
+    public byte[] getProfilePicture(String employeeId) {
+        Optional<Employee> optional = repository.findById(employeeId);
+        return optional.map(Employee::getProfilePicture).orElse(null);
     }
 }
