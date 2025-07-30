@@ -1,0 +1,118 @@
+{
+  "info": {
+    "name": "EmployeePortal - Attendance API",
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-1234567890ab",
+    "description": "Postman collection to test Attendance API endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Check In",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/attendance/check-in?employeeId=EMP-2025-001",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "attendance",
+            "check-in"
+          ],
+          "query": [
+            {
+              "key": "employeeId",
+              "value": "EMP-2025-001"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Check Out",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/attendance/check-out?employeeId=EMP-2025-001",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "attendance",
+            "check-out"
+          ],
+          "query": [
+            {
+              "key": "employeeId",
+              "value": "EMP-2025-001"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Monthly Summary (Calendar)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/attendance/monthly/EMP-2025-001",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "attendance",
+            "monthly",
+            "EMP-2025-001"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Monthly Summary (Counts)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/attendance/summary/EMP-2025-001",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "attendance",
+            "summary",
+            "EMP-2025-001"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get All Attendances",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/attendance",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "attendance"
+          ]
+        }
+      }
+    }
+  ]
+}
