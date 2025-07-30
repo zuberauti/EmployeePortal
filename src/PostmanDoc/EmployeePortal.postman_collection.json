@@ -10,7 +10,7 @@
 		{
 			"name": "addEmployee",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": []
 			},
 			"response": []
@@ -34,7 +34,7 @@
 		{
 			"name": "setProfilePic",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": []
 			},
 			"response": []
