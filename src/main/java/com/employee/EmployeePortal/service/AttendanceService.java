@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface AttendanceService {
     List<AttendanceDTO> getAllAttendances();
-    AttendanceDTO getAttendanceById(String attendanceId);
+    AttendanceDTO getAttendanceById(String attendanceId); //employee id
+    List<AttendanceDTO> getAttendancesByEmployeeId(String employeeId);//getting the specific employee all attendance
     AttendanceDTO createAttendance(AttendanceDTO attendanceDTO);
     AttendanceDTO updateAttendance(String attendanceId, AttendanceDTO attendanceDTO);
-    void deleteAttendance(String attendanceId);
-    AttendanceSummaryDTO getMonthlySummary(String employeeId);
+    AttendanceSummaryDTO getMonthlySummary(String employeeId);//quartely early half quarter
 
     AttendanceDTO checkIn(String employeeId);
     AttendanceDTO checkOut(String employeeId);

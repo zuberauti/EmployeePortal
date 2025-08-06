@@ -22,14 +22,14 @@ public class Attendance {
 
     private LocalDate attendanceDate;
 
-    private String status;
+    private String status;// whether he was in office or not or exception
 
     private LocalTime checkInTime;
 
     private LocalTime checkOutTime;
 
-    private String remarks;
+    private String remarks;// details to be stored for logged in time at office
 
     private LocalDateTime createdDate;
-    private LocalDateTime updatedDate;
+    private LocalDateTime updatedDate; //think of this leads to redeudant entry in table
 }

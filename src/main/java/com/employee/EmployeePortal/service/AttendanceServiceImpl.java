@@ -1,4 +1,3 @@
-
 package com.employee.EmployeePortal.service;
 
 import com.employee.EmployeePortal.dto.AttendanceDTO;
@@ -70,6 +69,16 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
+    public List<AttendanceDTO> getAttendancesByEmployeeId(String employeeId) {
+        return repository.findByEmployeeIdAndAttendanceDateBetween(
+                employeeId,
+                LocalDate.of(2000, 1, 1), // from long ago
+                LocalDate.now()
+        ).stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+
+    @Override
     public AttendanceDTO updateAttendance(String attendanceId, AttendanceDTO attendanceDTO) {
         if (!repository.existsById(attendanceId)) return null;
         Attendance entity = toEntity(attendanceDTO);
@@ -78,10 +87,6 @@ public class AttendanceServiceImpl implements AttendanceService {
         return toDTO(repository.save(entity));
     }
 
-    @Override
-    public void deleteAttendance(String attendanceId) {
-        repository.deleteById(attendanceId);
-    }
 
     @Override
     public AttendanceSummaryDTO getMonthlySummary(String employeeId) {
@@ -133,9 +138,9 @@ public class AttendanceServiceImpl implements AttendanceService {
         Optional<Attendance> existing = repository.findByEmployeeIdAndAttendanceDate(employeeId, today);
 
         if (existing.isEmpty()) throw new RuntimeException("No check-in found today.");
-
+        //update at last whether it is
         Attendance attendance = existing.get();
-        if (attendance.getCheckOutTime() != null) throw new RuntimeException("Already checked out.");
+        // if (attendance.getCheckOutTime() != null) throw new RuntimeException("Already checked out.");
 
         attendance.setCheckOutTime(LocalTime.now());
         attendance.setUpdatedDate(LocalDateTime.now());
