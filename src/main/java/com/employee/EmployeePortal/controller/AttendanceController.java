@@ -90,55 +90,47 @@ public class AttendanceController {
     @Autowired
    private AttendanceService attendanceService;
 
-    // ✅ Create new attendance (manual)
+
     @PostMapping
     public AttendanceDTO createAttendance(@RequestBody AttendanceDTO dto) {
         return attendanceService.createAttendance(dto);
     }
 
-    // ✅ Get all attendance records
     @GetMapping
     public List<AttendanceDTO> getAllAttendances() {
         return attendanceService.getAllAttendances();
     }
 
-    // ✅ Get attendance by attendanceId (not employeeId)
     @GetMapping("/{attendanceId}")
     public AttendanceDTO getAttendanceById(@PathVariable String attendanceId) {
         return attendanceService.getAttendanceById(attendanceId);
     }
 
-    // ✅ Get attendance by employeeId (NEW endpoint for your use case)
     @GetMapping("/employee/{employeeId}")
     public List<AttendanceDTO> getAttendancesByEmployeeId(@PathVariable String employeeId) {
         return attendanceService.getAttendancesByEmployeeId(employeeId);
     }
 
-    // ✅ Update attendance record
     @PutMapping("/{attendanceId}")
     public AttendanceDTO updateAttendance(@PathVariable String attendanceId, @RequestBody AttendanceDTO dto) {
         return attendanceService.updateAttendance(attendanceId, dto);
     }
 
-    // ✅ Monthly summary
     @GetMapping("/summary/{employeeId}")
     public AttendanceSummaryDTO getMonthlySummary(@PathVariable String employeeId) {
         return attendanceService.getMonthlySummary(employeeId);
     }
 
-    // ✅ Monthly day-wise report
     @GetMapping("/month/{employeeId}")
     public List<AttendanceDaySummaryDTO> getMonthlyAttendances(@PathVariable String employeeId) {
         return attendanceService.getMonthlyAttendances(employeeId);
     }
 
-    // ✅ Check-in
     @PostMapping("/check-in/{employeeId}")
     public AttendanceDTO checkIn(@PathVariable String employeeId) {
         return attendanceService.checkIn(employeeId);
     }
 
-    // ✅ Check-out
     @PostMapping("/check-out/{employeeId}")
     public AttendanceDTO checkOut(@PathVariable String employeeId) {
         return attendanceService.checkOut(employeeId);
