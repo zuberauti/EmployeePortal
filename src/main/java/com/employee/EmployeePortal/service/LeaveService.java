@@ -13,4 +13,5 @@ public interface LeaveService {
     LeaveRequestResponseDTO rejectLeaveRequest(Long requestId, String rejectedByEmployeeId, String reason);
     LeaveRequestResponseDTO cancelLeaveRequest(Long requestId, String employeeId);
     void initializeEmployeeLeaveBalance(String employeeId);
+    List<LeaveRequestResponseDTO> getPendingLeaveRequests();
 }

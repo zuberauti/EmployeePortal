@@ -3,7 +3,9 @@ package com.employee.EmployeePortal.service;
 import com.employee.EmployeePortal.dto.EmployeeDTO;
 import com.employee.EmployeePortal.entity.Employee;
 import com.employee.EmployeePortal.repository.EmployeeRepository;
+import com.employee.EmployeePortal.specification.EmployeeSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -127,4 +129,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         Optional<Employee> optional = repository.findById(employeeId);
         return optional.map(Employee::getProfilePicture).orElse(null);
     }
+
+    @Override
+    public List<EmployeeDTO> filterEmployees (String department, String position, String status, String employmentType, String managerId, String name) {
+        return repository.findAll(
+                Specification.where(EmployeeSpecification.hasDepartment(department))
+                        .and(EmployeeSpecification.hasPosition(position))
+                        .and(EmployeeSpecification.hasStatus(status))
+                        .and(EmployeeSpecification.hasEmploymentType(employmentType))
+                        .and(EmployeeSpecification.hasManager(managerId))
+                        .and(EmployeeSpecification.hasNameLike(name))
+        ).stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
 }

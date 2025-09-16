@@ -38,4 +38,7 @@ public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             @Param("status") LeaveStatus status);
+
+    long countByStatus(LeaveStatus status);
+    List<LeaveRequest> findByStatusOrderByRequestDateDesc(LeaveStatus status);
 }

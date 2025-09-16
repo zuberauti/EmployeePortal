@@ -5,6 +5,7 @@ import com.employee.EmployeePortal.entity.*;
 import com.employee.EmployeePortal.enums.LeaveStatus;
 import com.employee.EmployeePortal.exception.LeaveRequestConflictException;
 import com.employee.EmployeePortal.exception.InsufficientLeaveBalanceException;
+import com.employee.EmployeePortal.hr.service.HRActivityService;
 import com.employee.EmployeePortal.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,16 +25,19 @@ public class LeaveServiceImpl implements LeaveService {
     private final LeaveTypeRepository leaveTypeRepository;
     private final EmployeeLeaveBalanceRepository leaveBalanceRepository;
     private final EmployeeRepository employeeRepository;
+    private final HRActivityService hrActivityService;
 
     @Autowired
     public LeaveServiceImpl(LeaveRequestRepository leaveRequestRepository,
                             LeaveTypeRepository leaveTypeRepository,
                             EmployeeLeaveBalanceRepository leaveBalanceRepository,
-                            EmployeeRepository employeeRepository) {
+                            EmployeeRepository employeeRepository,
+                            HRActivityService hrActivityService) {
         this.leaveRequestRepository = leaveRequestRepository;
         this.leaveTypeRepository = leaveTypeRepository;
         this.leaveBalanceRepository = leaveBalanceRepository;
         this.employeeRepository = employeeRepository;
+        this.hrActivityService = hrActivityService;
     }
 
     @Override
@@ -89,6 +93,13 @@ public class LeaveServiceImpl implements LeaveService {
 
         leaveRequest = leaveRequestRepository.save(leaveRequest);
 
+        hrActivityService.logActivity(
+                "Leave Request",
+                "Leave request submitted for " + requestDTO.getStartDate() + " to " + requestDTO.getEndDate(),
+                employee.getFirstName() + " " + employee.getLastName(),
+                leaveRequest.getStatus().name()
+        );
+
         return convertToLeaveRequestResponseDTO(leaveRequest);
     }
 
@@ -131,6 +142,13 @@ public class LeaveServiceImpl implements LeaveService {
 
         leaveRequest = leaveRequestRepository.save(leaveRequest);
 
+        hrActivityService.logActivity(
+                "Leave Approved",
+                "Leave approved for " + leaveRequest.getStartDate() + " to " + leaveRequest.getEndDate(),
+                leaveRequest.getEmployee().getFirstName() + " " + leaveRequest.getEmployee().getLastName(),
+                leaveRequest.getStatus().name()
+        );
+
         return convertToLeaveRequestResponseDTO(leaveRequest);
     }
 
@@ -153,6 +171,14 @@ public class LeaveServiceImpl implements LeaveService {
         leaveRequest.setRejectionReason(reason);
 
         leaveRequest = leaveRequestRepository.save(leaveRequest);
+
+        hrActivityService.logActivity(
+                "Leave Rejected",
+                "Leave rejected for " + leaveRequest.getStartDate() + " to " + leaveRequest.getEndDate() +
+                        ". Reason: " + reason,
+                leaveRequest.getEmployee().getFirstName() + " " + leaveRequest.getEmployee().getLastName(),
+                leaveRequest.getStatus().name()
+        );
 
         return convertToLeaveRequestResponseDTO(leaveRequest);
     }
@@ -211,7 +237,22 @@ public class LeaveServiceImpl implements LeaveService {
 
         leaveRequest = leaveRequestRepository.save(leaveRequest);
 
+        hrActivityService.logActivity(
+                "Leave Cancelled",
+                "Leave cancelled for " + leaveRequest.getStartDate() + " to " + leaveRequest.getEndDate(),
+                leaveRequest.getEmployee().getFirstName() + " " + leaveRequest.getEmployee().getLastName(),
+                leaveRequest.getStatus().name()
+        );
+
         return convertToLeaveRequestResponseDTO(leaveRequest);
+    }
+
+    @Override
+    public List<LeaveRequestResponseDTO> getPendingLeaveRequests() {
+        return leaveRequestRepository.findByStatusOrderByRequestDateDesc(LeaveStatus.PENDING)
+                .stream()
+                .map(this::convertToLeaveRequestResponseDTO)
+                .collect(Collectors.toList());
     }
 
     private void checkLeaveBalance(String employeeId, Long leaveTypeId, int requestedDays) {

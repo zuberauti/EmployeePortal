@@ -70,4 +70,17 @@ public class EmployeeController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/filter")
+    public List<EmployeeDTO> filterEmployees(
+            @RequestParam(required = false) String department,
+            @RequestParam(required = false) String position,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String employmentType,
+            @RequestParam(required = false) String managerId,
+            @RequestParam(required = false) String name
+    ) {
+        return service.filterEmployees(department, position, status, employmentType, managerId, name);
+    }
+
 }

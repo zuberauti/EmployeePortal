@@ -14,4 +14,6 @@ public interface EmployeeService {
     void deleteEmployee(String id);
     void  updateProfilePicture(String employeeId, MultipartFile file) throws IOException;
     byte[] getProfilePicture(String employeeId);
+    List<EmployeeDTO> filterEmployees(String department, String position, String status, String employmentType, String managerId, String name);
+
 }
