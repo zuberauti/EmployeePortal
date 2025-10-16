@@ -4,10 +4,19 @@ import com.employee.EmployeePortal.dto.AttendanceDTO;
 import com.employee.EmployeePortal.dto.AttendanceDaySummaryDTO;
 import com.employee.EmployeePortal.dto.AttendanceSummaryDTO;
 import com.employee.EmployeePortal.entity.Attendance;
+import com.employee.EmployeePortal.entity.Employee;
 import com.employee.EmployeePortal.repository.AttendanceRepository;
+import com.employee.EmployeePortal.repository.EmployeeRepository;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -20,6 +29,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Autowired
     private AttendanceRepository repository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     private AttendanceDTO toDTO(Attendance entity) {
         AttendanceDTO dto = new AttendanceDTO();
@@ -175,5 +187,42 @@ public class AttendanceServiceImpl implements AttendanceService {
             return dto;
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public byte[] exportAttendanceToBytes() throws IOException {
+        List<Attendance> attendanceList = repository.findAll();
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Attendance");
+
+        // Header Row
+        Row header = sheet.createRow(0);
+        header.createCell(0).setCellValue("Employee ID");
+        header.createCell(1).setCellValue("Employee Name");
+        header.createCell(2).setCellValue("Date");
+        header.createCell(3).setCellValue("Status");
+
+        // Data Rows
+        int rowIdx = 1;
+        for (Attendance att : attendanceList) {
+            Row row = sheet.createRow(rowIdx++);
+            Employee emp = employeeRepository.findById(att.getEmployeeId()).orElse(null);
+
+            row.createCell(0).setCellValue(att.getEmployeeId());
+            row.createCell(1).setCellValue(emp != null ? emp.getFirstName() + " " + emp.getLastName() : "-");
+            row.createCell(2).setCellValue(att.getAttendanceDate().toString());
+            row.createCell(3).setCellValue(att.getStatus());
+        }
+
+        // Write to memory instead of directly to HttpServletResponse
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        workbook.write(bos);
+        workbook.close();
+
+        return bos.toByteArray();
+    }
+
+
+
 
 }

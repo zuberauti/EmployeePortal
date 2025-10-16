@@ -4,6 +4,8 @@ import com.employee.EmployeePortal.dto.AttendanceDTO;
 import com.employee.EmployeePortal.dto.AttendanceDaySummaryDTO;
 import com.employee.EmployeePortal.dto.AttendanceSummaryDTO;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 public interface AttendanceService {
@@ -18,4 +20,6 @@ public interface AttendanceService {
     AttendanceDTO checkOut(String employeeId);
 
     List<AttendanceDaySummaryDTO> getMonthlyAttendances(String employeeId);
+
+    byte[] exportAttendanceToBytes() throws IOException;
 }
