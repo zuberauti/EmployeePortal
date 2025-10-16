@@ -1,17 +1,3 @@
-//package com.employee.EmployeePortal.repository;
-//
-//import com.employee.EmployeePortal.entity.Employee;
-//import com.employee.EmployeePortal.enums.EmployeeStatus;
-//import org.springframework.data.jpa.repository.JpaRepository;
-//import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-//
-//import java.util.List;
-//
-//public interface EmployeeRepository extends JpaRepository<Employee, String>, JpaSpecificationExecutor<Employee> {
-//    List<Employee> findByStatus(EmployeeStatus status);
-//}
-//
-
 package com.employee.EmployeePortal.repository;
 
 import com.employee.EmployeePortal.entity.Employee;
